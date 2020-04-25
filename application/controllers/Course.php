@@ -126,6 +126,48 @@ class Course extends CI_Controller
 		}
 	}
 
+	public function getVenues(){
+		$validToken = $this->validToken();
+		$venues =   $this->db->select('*')->from('venues')->order_by('name', 'ASC')->get();
+		http_response_code('200');
+		echo json_encode(array( "status" => true, "message" => 'Success',"data" => $venues->result()));exit;
+	}
+
+	public function getVenue(){
+		$validToken = $this->validToken();
+		$data = file_get_contents('php://input');
+		$venueID = json_decode($data,true);
+		$venue =   $this->db->select('*')->from('venues')->where("id",$venueID['id'])->get()->row();
+		http_response_code('200');
+		echo json_encode(array( "status" => true, "message" => 'Success',"data" => $venue));exit;
+	}
+
+	public function addVenue(){
+		$validToken = $this->validToken();
+		$data = file_get_contents('php://input');
+		$venueData = json_decode($data,true);
+		if(is_null($venueData)){
+			$this->show_400();
+		}
+		$venue =   $this->db->insert('venues',$venueData);
+		http_response_code('200');
+		echo json_encode(array( "status" => true, "message" => 'Success',"data" => $venue));exit;
+	}
+
+	public function updateVenue(){
+		$validToken = $this->validToken();
+		$data = file_get_contents('php://input');
+		$venueData = json_decode($data,true);
+		if(is_null($venueData)){
+			$this->show_400();
+		}
+		$id = $venueData['id'];
+		unset($venueData['id']);
+		$venue =   $this->db->where('id',$id)->update('venues',$venueData);
+		http_response_code('200');
+		echo json_encode(array( "status" => true, "message" => 'Success',"data" => $venue));exit;
+	}
+
 	public function examinationsList(){
 		$validToken = $this->validToken();
 		$this->setAuditLog($validToken,38);

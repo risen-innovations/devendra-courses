@@ -64,6 +64,11 @@ $route['course/lists-by-category'] = 'course/listsByCategory';
 $route['course/lists-by-name'] = 'course/listsByName';
 $route['course/view-course'] = 'course/viewCourse';
 $route['course/update-course'] = 'course/updateCourse';
+$route['course/get-venues'] = 'course/getVenues';
+$route['course/get-venue'] = 'course/getVenue';
+$route['course/add-venue'] = 'course/addVenue';
+$route['course/update-venue'] = 'course/updateVenue';
+
 $route['course/examinations-list'] = 'course/examinationsList';
 $route['course/view-examination'] = 'course/viewExaminationById';
 $route['course/view-learners'] = 'course/viewLearners';
