@@ -128,7 +128,9 @@ class Course extends CI_Controller
 
 	public function getVenues(){
 		$validToken = $this->validToken();
-		$venues =   $this->db->select('*')->from('venues')->order_by('name', 'ASC')->get();
+		$this->db->select('*')->from('venues')
+		->order_by('status', 'DESC');
+		$venues = $this->db->order_by('name', 'ASC')->get();
 		http_response_code('200');
 		echo json_encode(array( "status" => true, "message" => 'Success',"data" => $venues->result()));exit;
 	}
