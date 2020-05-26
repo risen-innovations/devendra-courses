@@ -99,8 +99,13 @@ class Course_model extends CI_Model
 			$search['filter_by_name'] = '';
 			$search['filter_by_value'] = '';
 		}
-		$courses = $this->db->where('trade_type',$search['filter_by_value'])
-					->order_by($search['name'],$search['sorting'])->get('courses');
+		$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
+					->join('status s','c.status = s.status_id','left')
+					->join('trade_type tt','c.trade_type = tt.id',"left")
+					->join('trade_category tc','c.trade_category = tc.id',"left")
+					->join('trade_level tl','c.trade_level = tl.id',"left")
+					->where('c.trade_type',$search['filter_by_value'])
+					->order_by('course_name','ASC')->get();
 		http_response_code('200');
 		if($courses->num_rows() > 0){
 			$data = array();
@@ -122,17 +127,67 @@ class Course_model extends CI_Model
 		}
 		$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
 					->join('status s','c.status = s.status_id','left')
-					->like('course_name',$search['filter_by_value'])
-					->order_by('c.'.$search['name'],'c.'.$search['sorting'])->get();
-		http_response_code('200');
+					->join('trade_type tt','c.trade_type = tt.id',"left")
+					->join('trade_category tc','c.trade_category = tc.id',"left")
+					->join('trade_level tl','c.trade_level = tl.id',"left")
+					->like('course_name', $search['filter_by_value'])
+					->or_like('c.short_form', $search['filter_by_value'])
+					->order_by('c.course_name','ASC')->get();
+		$data = array();
+		foreach (($courses->result()) as $row) {
+			$data[] = $row;
+		}
 		if($courses->num_rows() > 0){
-			$data = array();
-			foreach (($courses->result()) as $row) {
-				$data[] = $row;
-			}
+			http_response_code('200');
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => false, "message" => 'No result',"data" =>$data));exit;
+		}
+	}
+
+	public function getCoursesByType($type){
+		if(is_null($type)){
+			http_response_code('500');
+		}
+		$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
+					->join('status s','c.status = s.status_id','left')
+					->join('trade_type tt','c.trade_type = tt.id',"left")
+					->join('trade_category tc','c.trade_category = tc.id',"left")
+					->join('trade_level tl','c.trade_level = tl.id',"left")
+					->like('tt.id', $type['type'])
+					->order_by('c.course_name','ASC')->get();
+		$data = array();
+		foreach (($courses->result()) as $row) {
+			$data[] = $row;
+		}
+		if($courses->num_rows() > 0){
+			http_response_code('200');
+			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
+		}else{
+			echo json_encode(array( "status" => false, "message" => 'No result',"data" =>$data));exit;
+		}
+	}
+
+	public function getCoursesByLevel($level){
+		if(is_null($level)){
+			http_response_code('500');
+		}
+		$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
+					->join('status s','c.status = s.status_id','left')
+					->join('trade_type tt','c.trade_type = tt.id',"left")
+					->join('trade_category tc','c.trade_category = tc.id',"left")
+					->join('trade_level tl','c.trade_level = tl.id',"left")
+					->like('tl.id', $level['level'])
+					->order_by('c.course_name','ASC')->get();
+		$data = array();
+		foreach (($courses->result()) as $row) {
+			$data[] = $row;
+		}
+		if($courses->num_rows() > 0){
+			http_response_code('200');
+			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
+		}else{
+			echo json_encode(array( "status" => false, "message" => 'No result',"data" =>$data));exit;
 		}
 	}
 
@@ -170,13 +225,17 @@ class Course_model extends CI_Model
 		if($search['filter_by_name'] == ''){
 			$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
 			->join('status s','c.status = s.status_id','left')
-			->order_by('c.'.$search['name'],'c.'.$search['sorting'])
+			->join('trade_level tl','tl.id = c.trade_level','left')
+			->join('trade_type tt','tt.id = c.trade_type','left')
+			->order_by('c.course_name','ASC')
 			->get();
 		}else{
 			$courses = $this->db->select('*,s.id as sid')->from('courses c')
 			->join('status s','c.status = s.status_id','left')
+			->join('trade_level tl','tl.id = c.trade_level','left')
+			->join('trade_type tt','tt.id = c.trade_type','left')
 			->where('c.trade_category','c.'.$search['filter_by_value'])
-			->order_by('c.'.$search['name'],'c.'.$search['sorting'])
+			->order_by('c.course_name','ASC')
 			->get();
 		}
 		http_response_code('200');

@@ -62,6 +62,26 @@ class Course extends CI_Controller
 		$id = $this->course_model->getCoursesByCategory($cat);
 	}
 
+	public function listsByType(){
+		$validToken = $this->validToken();
+		$data = file_get_contents('php://input');
+		$types = json_decode($data,true);
+		if(is_null($types)){
+			$this->show_400();
+		}
+		$id = $this->course_model->getCoursesByType($types);
+	}
+
+	public function listsByLevel(){
+		$validToken = $this->validToken();
+		$data = file_get_contents('php://input');
+		$level = json_decode($data,true);
+		if(is_null($level)){
+			$this->show_400();
+		}
+		$id = $this->course_model->getCoursesByLevel($level);
+	}
+
 	public function listsByName(){
 		$validToken = $this->validToken();
 		$data = file_get_contents('php://input');
