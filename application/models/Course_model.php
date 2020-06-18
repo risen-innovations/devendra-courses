@@ -196,7 +196,7 @@ class Course_model extends CI_Model
 			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
 		}
 		$this->db->where('c.id',$search['filter_by_value']);
-		$courses = $this->db->select('*')->from('courses c')
+		$courses = $this->db->select('*, c.id as course_id')->from('courses c')
 		->join('trade_type tt','c.trade_type = tt.id',"left")
 		->join('trade_category tc','c.trade_category = tc.id',"left")
 		->join('trade_level tl','c.trade_level = tl.id',"left")
