@@ -119,7 +119,7 @@ class Course extends CI_Controller
 			$this->show_400();
 		}
 		$course =   $this->course_model->getCoursesByID($courseData);
-		print_r($course);
+		//print_r($course);
 		if(is_null($course)){
 			$this->show_404();
 		}
