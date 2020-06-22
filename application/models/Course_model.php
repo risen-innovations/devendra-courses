@@ -224,19 +224,19 @@ class Course_model extends CI_Model
 		}
 		if($search['filter_by_name'] == ''){
 			$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
-			->join('status s','c.status = s.status_id','left')
-			->join('trade_level tl','tl.id = c.trade_level','left')
-			->join('trade_type tt','tt.id = c.trade_type','left')
-			->order_by('c.course_name','ASC')
-			->get();
+						->join('status s','c.status = s.status_id','left')
+						->join('trade_level tl','tl.id = c.trade_level','left')
+						->join('trade_type tt','tt.id = c.trade_type','left')
+						->order_by('c.course_name','ASC')
+						->get();
 		}else{
 			$courses = $this->db->select('*,s.id as sid')->from('courses c')
-			->join('status s','c.status = s.status_id','left')
-			->join('trade_level tl','tl.id = c.trade_level','left')
-			->join('trade_type tt','tt.id = c.trade_type','left')
-			->where('c.trade_category','c.'.$search['filter_by_value'])
-			->order_by('c.course_name','ASC')
-			->get();
+						->join('status s','c.status = s.status_id','left')
+						->join('trade_level tl','tl.id = c.trade_level','left')
+						->join('trade_type tt','tt.id = c.trade_type','left')
+						->where('c.trade_category','c.'.$search['filter_by_value'])
+						->order_by('c.course_name','ASC')
+						->get();
 		}
 		http_response_code('200');
 		if($courses->num_rows() > 0){
