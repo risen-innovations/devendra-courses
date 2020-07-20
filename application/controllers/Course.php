@@ -230,6 +230,20 @@ class Course extends CI_Controller
 		$examination = $this->course_model->updateRetestLearner($data);
 	}
 
+	public function getStatsByCourses(){
+		$validToken = $this->validToken();
+		$courses = $this->db->select("*")->from('courses')
+					->get();
+		if($courses->num_rows() > 0){
+			$courses = $courses->result();
+			http_response_code("200");
+			echo json_encode(array("status" => true, "message" => "Success", "data" => $courses));
+			exit;
+		}else{
+			http_response_code("204");
+		}
+	}
+
 	private function setAuditLog($data,$api_id){
 		$audit_db = $this->load->database('audit_log',TRUE);
 		$logs = array(

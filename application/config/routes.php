@@ -76,3 +76,5 @@ $route['course/view-examination'] = 'course/viewExaminationById';
 $route['course/view-learners'] = 'course/viewLearners';
 $route['course/view-individual-learner'] = 'course/viewIndividualLearner';
 $route['course/update-retest-learner'] = 'course/updateRetestLearner';
+
+$route['course/get-stats-by-courses'] = 'course/getStatsByCourses';
