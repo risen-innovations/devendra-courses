@@ -7,7 +7,7 @@ class Course extends CI_Controller
 {
 
 	public function __construct()
-	{
+	{ 
 		parent::__construct();
 		$this->load->model('course_model');
 		$this->objOfJwt = new CreatorJwt();
@@ -230,20 +230,6 @@ class Course extends CI_Controller
 		$examination = $this->course_model->updateRetestLearner($data);
 	}
 
-	public function getStatsByCourses(){
-		$validToken = $this->validToken();
-		$courses = $this->db->select("*")->from('courses')
-					->get();
-		if($courses->num_rows() > 0){
-			$courses = $courses->result();
-			http_response_code("200");
-			echo json_encode(array("status" => true, "message" => "Success", "data" => $courses));
-			exit;
-		}else{
-			http_response_code("204");
-		}
-	}
-
 	private function setAuditLog($data,$api_id){
 		$audit_db = $this->load->database('audit_log',TRUE);
 		$logs = array(
@@ -259,20 +245,20 @@ class Course extends CI_Controller
 		$account_db = $this->load->database('account',TRUE);
 		$authToken = $this->input->get_request_header('Authorization', TRUE);
 		if(is_null($authToken)){
-			http_response_code('400');
-			echo json_encode(array( "status" => false, "message" => 'Bad Request, Auth Token is required.'));exit;
+			http_response_code('200');
+			echo json_encode(array( "status" => false, "message" => 'Bad Request, Auth Token is required.', "data"=>null));exit;
 		}else{
 			$checkToken = $account_db->select('*')->get_where('auth_tokens',array('auth_token'=>$authToken))->row();
 
 			if(is_null($checkToken)){
-				http_response_code('403');
-				echo json_encode(array( "status" => false, "message" => 'Invalid Authentication Token.'));exit;
+				http_response_code('200');
+				echo json_encode(array( "status" => false, "message" => 'Invalid Authentication Token.' , "data"=>null));exit;
 			}
 			$now = time();
 			$expiryDateString = strtotime($checkToken->auth_token_expiry_date);
 			if($expiryDateString < $now){
-				http_response_code('401');
-				echo json_encode(array( "status" => false, "message" => 'Authentication Token has expired.'));exit;
+				http_response_code('200');
+				echo json_encode(array( "status" => false, "message" => 'Authentication Token has expired.' , "data"=>null));exit;
 			}
 			$decodeJWT = $this->objOfJwt->DecodeToken($checkToken->issued_to);
 			$data = $account_db->get_where('accounts',array('user_id'=>$decodeJWT['user_id']))->row();
@@ -284,19 +270,19 @@ class Course extends CI_Controller
 	}
 
 	private function show_404(){
-		http_response_code('404');
-		echo json_encode(array( "status" => false, "message" => 'Not Found.'));exit;
+		http_response_code('200');
+		echo json_encode(array( "status" => false, "message" => 'Not Found.' , "data"=>null));exit;
 	}
 
 	private function show_400(){
-		http_response_code('400');
-		echo json_encode(array( "status" => false, "message" => 'Bad Request.'));exit;
+		http_response_code('200');
+		echo json_encode(array( "status" => false, "message" => 'Bad Request.' , "data"=>null));exit;
 	}
 
 	private function show_error_500(){
-		http_response_code('500');
+		http_response_code('200');
 		$message = 'Internal Server Error.';
-		echo json_encode(array( "status" => false, "message" => $message));exit;
+		echo json_encode(array( "status" => false, "message" => $message , "data"=>null));exit;
 	}
 
 

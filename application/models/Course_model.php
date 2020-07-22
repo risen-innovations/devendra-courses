@@ -18,7 +18,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 	}
 
@@ -32,7 +32,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 	}
 
@@ -46,7 +46,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' , "data"=>null));exit;
 		}
 	}
 
@@ -60,7 +60,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' ,  "data"=>null));exit;
 		}
 	}
 
@@ -74,7 +74,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' , "data"=>null));exit;
 		}
 	}
 
@@ -88,7 +88,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' , "data"=>null));exit;
 		}
 	}
 
@@ -114,7 +114,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' , "data"=>null));exit;
 		}
 	}
 	
@@ -147,7 +147,8 @@ class Course_model extends CI_Model
 
 	public function getCoursesByType($type){
 		if(is_null($type)){
-			http_response_code('500');
+			http_response_code('200');
+			echo json_encode(array( "status" => false, "message" => 'No result',"data" =>$data));exit;
 		}
 		$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
 					->join('status s','c.status = s.status_id','left')
@@ -170,7 +171,8 @@ class Course_model extends CI_Model
 
 	public function getCoursesByLevel($level){
 		if(is_null($level)){
-			http_response_code('500');
+			http_response_code('200');
+			echo json_encode(array( "status" => false, "message" => 'No result',"data" =>$data));exit;
 		}
 		$courses = $this->db->select('*,s.id as sid, c.id as cid')->from('courses c')
 					->join('status s','c.status = s.status_id','left')
@@ -193,7 +195,8 @@ class Course_model extends CI_Model
 
 	public function getCoursesByID($search){
 		if(is_null($search)){
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			http_response_code('200');
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 		$this->db->where('c.id',$search['filter_by_value']);
 		$courses = $this->db->select('*, c.id as course_id')->from('courses c')
@@ -211,7 +214,7 @@ class Course_model extends CI_Model
 			$data[] = $courses->row();
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 	}
 
@@ -246,7 +249,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 	}
 
@@ -262,7 +265,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 	}
 
@@ -293,7 +296,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result', "data"=>null));exit;
 		}
 	}
 
@@ -308,7 +311,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' , "data"=>null));exit;
 		}
 	}
 
@@ -323,7 +326,7 @@ class Course_model extends CI_Model
 			}
 			echo json_encode(array( "status" => true, "message" => 'Success',"data" =>$data));exit;
 		}else{
-			echo json_encode(array( "status" => true, "message" => 'No result'));exit;
+			echo json_encode(array( "status" => true, "message" => 'No result' , "data"=>null));exit;
 		}
 	}
 
@@ -335,7 +338,7 @@ class Course_model extends CI_Model
 			http_response_code('200');
 			$message = 'Success';
 			$status = true;
-			echo json_encode(array( "status" => $status, "message" => $message));exit;
+			echo json_encode(array( "status" => $status, "message" => $message , "data"=>null));exit;
 		}else{
 			$this->show_error_500();
 		}
