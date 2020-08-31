@@ -54,7 +54,8 @@ $route['404_override'] = '';
 $route['translate_utms_dashes'] = FALSE;
 $route['migrate'] = 'migrate';
 $route['course/add-course'] = 'course/addCourse';
-$route['course/get-course-types'] = 'course/courseTypeList';
+$route['course/get-course-types'] = 'course/courseTypes';
+$route['course/get-trade-types'] = 'course/tradeTypeList';
 $route['course/get-course-cats'] = 'course/courseCatList';
 $route['course/get-course-levels'] = 'course/courseLevelList';
 $route['course/get-course-modes'] = 'course/courseModeList';
@@ -77,4 +78,4 @@ $route['course/view-learners'] = 'course/viewLearners';
 $route['course/view-individual-learner'] = 'course/viewIndividualLearner';
 $route['course/update-retest-learner'] = 'course/updateRetestLearner';
 
-$route['course/get-stats-by-courses'] = 'course/getStatsByCourses';
+$route['get-stats-by-courses'] = 'course/getStatsByCourses';

@@ -8,7 +8,7 @@ class Course_model extends CI_Model
 		parent::__construct();
 	}
 
-	public function getCourseTypes(){
+	public function getTradeTypes(){
 		$categories = $this->db->order_by('trade_type_name','asc')->get('trade_type');
 		http_response_code('200');
 		if($categories->num_rows() > 0){
@@ -230,6 +230,7 @@ class Course_model extends CI_Model
 						->join('status s','c.status = s.status_id','left')
 						->join('trade_level tl','tl.id = c.trade_level','left')
 						->join('trade_type tt','tt.id = c.trade_type','left')
+						->order_by('c.status','DESC')
 						->order_by('c.course_name','ASC')
 						->get();
 		}else{
@@ -238,6 +239,7 @@ class Course_model extends CI_Model
 						->join('trade_level tl','tl.id = c.trade_level','left')
 						->join('trade_type tt','tt.id = c.trade_type','left')
 						->where('c.trade_category','c.'.$search['filter_by_value'])
+						->order_by('c.status','DESC')
 						->order_by('c.course_name','ASC')
 						->get();
 		}

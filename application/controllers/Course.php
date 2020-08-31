@@ -22,9 +22,9 @@ class Course extends CI_Controller
 		$auditLog = $this->course_model->getCourseLists($search);
 	}
 
-	public function courseTypeList(){
+	public function tradeTypeList(){
 		$validToken = $this->validToken();
-		$id = $this->course_model->getCourseTypes();
+		$id = $this->course_model->getTradeTypes();
 	}
 
 	public function courseCatList(){
@@ -228,6 +228,62 @@ class Course extends CI_Controller
 		$data = json_decode($data,true);
 		$this->setAuditLog($validToken,33);
 		$examination = $this->course_model->updateRetestLearner($data);
+	}
+
+	public function getStatsByCourses(){
+		$validToken = $this->validToken();
+		$data = file_get_contents('php://input');
+		$data = json_decode($data,true);
+		$courses = $this->db->select("*")->from("courses c")->get();
+		if($courses->num_rows() > 0){
+			$scheduling_db = $this->load->database("event",true);
+			foreach($courses->result() as $c){
+				$c->learners_total = 0;
+				$c->sg = 0;
+				$c->foreigner = 0;
+				$training_dates = $scheduling_db->select("e.id, date, count(ed.id) as count")->from("events e")
+									->join("events_dates ed","e.id = ed.event_id","left")
+									->where("e.course_id", $c->id)
+									->get()->result();
+				$c->training_dates = $training_dates;
+				if(empty($training_dates)){
+					$c->weekend = null;
+				}
+				foreach($training_dates as $date){
+					if(date('N', strtotime($date->date)) >= 6){
+						$c->weekend = true;
+						break;
+					}else{
+						$c->weekend = false;
+					}
+					$c->count = $date->count;
+					$learners = $scheduling_db->select('learner_id, count(learner_id) as count')->from('events_learners')
+									->where('event_id', $date->id)->get();
+					$learners_array = array();
+					if($learners->num_rows() > 0){
+						$co_db = $this->load->database("company", true);
+						foreach($learners->result() as $l){
+							$nationality = $co_db->select("nationality")->from("learner")
+											->where("learner_id", $l->learner_id)
+											->get();
+							if($nationality->num_rows() > 0){
+								if($nationality->row()->nationality == 196){
+									$c->sg += 1;
+								}else{
+									$c->foreigner += 1;
+								}
+							}
+							$c->learners_total += $l->count;
+						}
+					}
+				}
+			}
+			http_response_code("200");
+			echo json_encode(array( "status" => true, "message" => 'Success' , "data"=>$courses->result()));exit;
+		}else{
+			http_response_code("200");
+			echo json_encode(array( "status" => false, "message" => 'No Rows Found' , "data"=>null));exit;
+		}
 	}
 
 	private function setAuditLog($data,$api_id){
