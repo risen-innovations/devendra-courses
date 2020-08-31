@@ -234,6 +234,10 @@ class Course extends CI_Controller
 		$validToken = $this->validToken();
 		$data = file_get_contents('php://input');
 		$data = json_decode($data,true);
+		$start_date = strtotime($data['selected_period']);
+		$start_date = date("Y-m-d 00:00:00", $start_date);
+		$end_date = strtotime("+3 months", strtotime($data['selected_period']));
+		$end_date = date("Y-m-t 23:59:59", $end_date);
 		$courses = $this->db->select("*")->from("courses c")->get();
 		if($courses->num_rows() > 0){
 			$scheduling_db = $this->load->database("event",true);
@@ -244,15 +248,16 @@ class Course extends CI_Controller
 				$training_dates = $scheduling_db->select("e.id, date, count(ed.id) as count")->from("events e")
 									->join("events_dates ed","e.id = ed.event_id","left")
 									->where("e.course_id", $c->id)
+									->where("ed.date <=", $end_date)
+									->where("ed.date >=", $start_date)
 									->get()->result();
 				$c->training_dates = $training_dates;
-				if(empty($training_dates)){
-					$c->weekend = null;
-				}
 				foreach($training_dates as $date){
 					if(date('N', strtotime($date->date)) >= 6){
 						$c->weekend = true;
 						break;
+					}elseif($date->date == null){
+						$c->weekend = null;
 					}else{
 						$c->weekend = false;
 					}
